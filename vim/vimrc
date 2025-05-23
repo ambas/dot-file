@@ -1,11 +1,11 @@
 
-source appearance.vim
-source encoding_syntax.vim
-source plugins.vim
-source nerdtree.vim
-source ale.vim
-source editor.vim
-source mappings.vim
+source ~/.vim/appearance.vim
+source ~/.vim/encoding_syntax.vim
+source ~/.vim/plugins.vim
+source ~/.vim/nerdtree.vim
+source ~/.vim/ale.vim
+source ~/.vim/editor.vim
+source ~/.vim/mappings.vim
 
 " --- End of Modular Configuration ---
 
