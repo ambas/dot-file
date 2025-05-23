@@ -1,34 +1,8 @@
-" Set color scheme to molokai
-colorscheme molokai
 
-" Enable 256-color support for better compatibility
-set t_Co=256
+source appearance.vim
+source encoding_syntax.vim
+source plugins.vim
 
-" Background preference (dark is recommended for molokai)
-set background=dark
-
-" -----------------
-" Encoding and Syntax
-" -----------------
-" Set encoding to UTF-8
-set encoding=UTF-8
-
-" Enable syntax highlighting
-syntax enable
-
-" -----------------
-" Plugin Manager Initialization
-" -----------------
-" Use vim-plug for plugin management
-call plug#begin('~/.vim/plugged')
-
-" Plugins
-Plug 'elixir-editors/vim-elixir'      " Elixir language support
-Plug 'dense-analysis/ale'            " ALE for linting and formatting
-Plug 'scrooloose/nerdtree'           " File explorer
-Plug 'ryanoasis/vim-devicons'        " NERDTree icons
-
-call plug#end()
 
 " -----------------
 " NERDTree Settings
@@ -83,6 +57,10 @@ set clipboard=unnamed
 
 " Enable line numbers in all buffers
 set number
+
+
+set laststatus=2
+set statusline=%F\ %m%r%h%w\ [%{&ff}/%Y]\ [%l,%v][%p%%]
 
 " -----------------
 " Search Settings
