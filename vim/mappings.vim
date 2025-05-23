@@ -16,3 +16,7 @@ nnoremap <leader>w :w<CR>
 " If you intend to, for example, run the current file, you'd need something more specific.
 " For Elixir, it might be: nnoremap <leader>r :w \| !mix run %<CR> (example)
 nnoremap <leader>r :w \| @:<CR>
+
+" --- fzf.vim mappings ---
+" Search files in the current directory (respects .gitignore)
+nnoremap <leader>f :Files<CR>

@@ -7,5 +7,7 @@ Plug 'dense-analysis/ale'             " ALE for linting and formatting
 Plug 'scrooloose/nerdtree'            " File explorer
 Plug 'ryanoasis/vim-devicons'         " NERDTree icons
 Plug 'psliwka/vim-smoothie'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
