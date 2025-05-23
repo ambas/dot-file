@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/Users/ambaschobsanti/Developer/crafting-interpreters/slox/Sources'
+let g:netrw_dirhist_2='/Users/ambaschobsanti/Developer/crafting-interpreters/slox'
+let g:netrw_dirhist_1='/Users/ambaschobsanti'
