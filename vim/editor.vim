@@ -1,3 +1,13 @@
+" Highlight all matches when seraching or using *
+set hlsearch
+set incsearch
+" Use 4 spaces for indent
+" - tabstop: visual width of a tab character
+" - shiftwidth: number of spaces used for each indentation level
+" - expandtab: insert spaces when pressing <Tab>
+set tabstop=4
+set shiftwidth=4
+set expandtab
 " Enable relative line numbers globally
 set relativenumber
 
