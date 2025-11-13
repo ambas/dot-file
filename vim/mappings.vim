@@ -20,3 +20,6 @@ nnoremap <leader>r :w \| @:<CR>
 " --- fzf.vim mappings ---
 " Search files in the current directory (respects .gitignore)
 nnoremap <leader>f :Files<CR>
+
+" In insert mode, create a new line above and continue inserting (Escape + Shift+O)
+inoremap <C-o> <Esc>O
