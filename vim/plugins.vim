@@ -1,4 +1,6 @@
 " Use vim-plug for plugin management
+" Use :PlugInstall command to install new plug in
+" Use :PlugUpdate command for update plugins
 call plug#begin('~/.vim/plugged')
 
 " Plugins
