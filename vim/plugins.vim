@@ -11,6 +11,7 @@ Plug 'ryanoasis/vim-devicons'         " NERDTree icons
 Plug 'psliwka/vim-smoothie'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
 
 Plug 'prabirshrestha/vim-lsp'
 call plug#end()
