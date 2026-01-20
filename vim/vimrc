@@ -68,6 +68,31 @@ if executable("elixir")
   augroup END
 endif
 
+" Configure Swift language server (sourcekit-lsp)
+let s:sourcekit_lsp_cmd = ''
+
+if executable('sourcekit-lsp')
+  let s:sourcekit_lsp_cmd = 'sourcekit-lsp'
+else
+  " Fallback: check Xcode toolchain path
+  let s:xcode_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp'
+  if filereadable(s:xcode_path)
+    let s:sourcekit_lsp_cmd = s:xcode_path
+  endif
+endif
+
+if !empty(s:sourcekit_lsp_cmd)
+  augroup lsp_swift_setup
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'sourcekit-lsp',
+          \ 'cmd': {server_info->[s:sourcekit_lsp_cmd]},
+          \ 'allowlist': ['swift'],
+          \ })
+    autocmd FileType swift setlocal omnifunc=lsp#complete
+  augroup END
+endif
+
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
     setlocal signcolumn=yes
