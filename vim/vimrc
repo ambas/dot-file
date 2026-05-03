@@ -39,6 +39,11 @@ augroup END
 let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('~/vim-lsp.log')
 
+let s:mix_escripts = expand('~/.mix/escripts')
+if isdirectory(s:mix_escripts) && $PATH !~# s:mix_escripts
+  let $PATH = s:mix_escripts . ':' . $PATH
+endif
+
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
@@ -53,14 +58,16 @@ if executable('pylsp')
 endif
 
 
-" Configure as the elixir language server
-if executable("elixir")
+" Configure Elixir language server (Expert)
+let s:expert_lsp_cmd = expand('~/.vim/lsp/expert_darwin_arm64')
+
+if executable(s:expert_lsp_cmd)
   augroup lsp_elixir_setup
     autocmd!
     autocmd User lsp_setup call lsp#register_server({
           \ 'name': 'expert',
-          \ 'cmd': [expand('~/.vim/lsp/expert_darwin_arm64'), '--stdio'],
-           \ 'workspace_config': {'root_uri': '/Users/ambaschobsanti/Developer/learn/Elixir/test_mix'},
+          \ 'cmd': {server_info->[s:expert_lsp_cmd, '--stdio']},
+          \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), ['mix.exs', '.git']))},
           \ 'allowlist': ['elixir', 'eelixir'],
           \ })
     autocmd FileType elixir setlocal omnifunc=lsp#complete
