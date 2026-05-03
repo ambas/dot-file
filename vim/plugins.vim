@@ -14,4 +14,10 @@ Plug 'junegunn/fzf.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 
 Plug 'prabirshrestha/vim-lsp'
+
+" JavaScript/TypeScript support
+Plug 'pangloss/vim-javascript'        " JavaScript syntax and indentation
+Plug 'leafgarland/typescript-vim'     " TypeScript syntax highlighting
+Plug 'maxmellon/vim-jsx-pretty'       " JSX/React syntax highlighting
+
 call plug#end()

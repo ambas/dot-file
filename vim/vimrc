@@ -93,6 +93,20 @@ if !empty(s:sourcekit_lsp_cmd)
   augroup END
 endif
 
+" Configure TypeScript/JavaScript language server
+if executable('typescript-language-server')
+  augroup lsp_typescript_setup
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'typescript-language-server',
+          \ 'cmd': {server_info->['typescript-language-server', '--stdio']},
+          \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), ['package.json', 'tsconfig.json', 'jsconfig.json', '.git']))},
+          \ 'allowlist': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'],
+          \ })
+    autocmd FileType javascript,javascriptreact,typescript,typescriptreact setlocal omnifunc=lsp#complete
+  augroup END
+endif
+
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
     setlocal signcolumn=yes
@@ -107,8 +121,15 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
     nmap <buffer> K <plug>(lsp-hover)
-    nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
-    nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+    " Note: Ctrl+f and Ctrl+d are preserved for default vim scrolling
+    " Use Ctrl+e and Ctrl+y for fine scrolling in LSP hover windows if needed
 
     " refer to doc to add more commands
 endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for buffers that have LSP enabled
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END

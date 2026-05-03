@@ -1,9 +1,17 @@
-" Configure linters and fixers for Elixir
+" Configure linters and fixers
 let g:ale_linters = {
-\   'elixir': ['credo']
+\   'elixir': ['credo'],
+\   'javascript': ['eslint'],
+\   'typescript': ['eslint', 'tsserver'],
+\   'javascriptreact': ['eslint'],
+\   'typescriptreact': ['eslint', 'tsserver']
 \}
 let g:ale_fixers = {
-\   'elixir': ['mix_format']
+\   'elixir': ['mix_format'],
+\   'javascript': ['prettier', 'eslint'],
+\   'typescript': ['prettier', 'eslint'],
+\   'javascriptreact': ['prettier', 'eslint'],
+\   'typescriptreact': ['prettier', 'eslint']
 \}
 
 " Enable fixing on save
