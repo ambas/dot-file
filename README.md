@@ -2,6 +2,8 @@
 
 Personal dotfiles. This repo currently manages a Vim setup with modular config files, Vim-Plug plugins, ALE linting/fixing, fzf, NERDTree, and LSP support for Elixir, Swift, Python, JavaScript, and TypeScript.
 
+This setup is primarily tested on macOS. The core Vim config should load anywhere Vim and the configured plugins are available, but a few optional language tools are platform-specific.
+
 ## Prerequisites
 
 On macOS, install Apple's command line tools first:
@@ -16,6 +18,8 @@ Make sure these commands are available:
 git --version
 vim --version
 ```
+
+For the remote one-shot install, `curl` must also be available.
 
 ## Quick Install
 
@@ -89,7 +93,7 @@ ln -sfn "$HOME/Developer/configs/dot-file/vim/vimrc" "$HOME/.vimrc"
 ln -sfn "$HOME/Developer/configs/dot-file/vim" "$HOME/.vim"
 ```
 
-Install or update Vim plugins:
+Install or update Vim plugins. This step requires network access:
 
 ```sh
 vim +PlugInstall +qall
@@ -120,11 +124,13 @@ mix local.hex --force
 mix archive.install hex credo --force
 ```
 
-This repo also includes an Expert language server binary at:
+This repo also includes an Expert language server binary for macOS Apple Silicon at:
 
 ```text
 vim/lsp/expert_darwin_arm64
 ```
+
+On Intel macOS, Linux, or other architectures, replace that binary with a compatible Expert build or skip it. The Vim config only registers Expert when the binary is executable.
 
 ### Swift
 
@@ -158,4 +164,4 @@ vim/lsp/                  Local language server binaries
 
 - The main `vim/vimrc` sources files from `~/.vim`, so linking the whole `vim` directory to `~/.vim` is required.
 - Existing Vim settings are moved into a timestamped `~/.dotfile-backup-*` directory during the install steps above.
-- Plugin source checkouts live under `vim/plugged`, but `:PlugInstall` or `:PlugUpdate` should still be run after setup.
+- Plugin source checkouts are intentionally ignored by Git. Run `:PlugInstall` or `:PlugUpdate` on each machine after setup.

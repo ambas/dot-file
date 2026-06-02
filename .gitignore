@@ -1,0 +1,11 @@
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Local Vim runtime state
+vim/.netrwhist
+vim/.expert/
+
+# Plugin checkouts are installed by Vim-Plug on each machine.
+vim/plugged/
