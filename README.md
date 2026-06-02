@@ -1,6 +1,6 @@
 # dot-file
 
-Personal dotfiles. This repo currently manages a Vim setup with modular config files, Vim-Plug plugins, ALE linting/fixing, fzf, NERDTree icons, and LSP support for Elixir, Swift, Python, JavaScript, and TypeScript.
+Personal dotfiles. This repo currently manages a Vim setup with modular config files, Vim-Plug plugins, ALE linting/fixing, fzf, NERDTree icons, LSP support for Elixir, Swift, Python, JavaScript, and TypeScript, plus Karabiner-Elements keyboard configuration.
 
 This setup is primarily tested on macOS. The core Vim config should load anywhere Vim and the configured plugins are available, but a few optional language tools are platform-specific.
 
@@ -44,6 +44,8 @@ The installer asks before it:
 
 - Moves existing `~/.vimrc` or `~/.vim` into a timestamped backup directory.
 - Creates Vim symlinks.
+- Moves existing `~/.config/karabiner` into a timestamped backup directory.
+- Creates a Karabiner config symlink.
 - Runs Vim-Plug plugin installation.
 - Installs JetBrainsMono Nerd Font for Vim file icons.
 - Installs optional language tooling.
@@ -73,6 +75,12 @@ Install only the Nerd Font used by Vim icons:
 INSTALL_TASKS="nerd_font" ./install.sh
 ```
 
+Install only Karabiner config:
+
+```sh
+INSTALL_TASKS="karabiner_config" ./install.sh
+```
+
 Run only selected language-tool tasks by setting `LANGUAGE_TOOL_TASKS`:
 
 ```sh
@@ -98,6 +106,8 @@ Create the symlinks:
 ```sh
 ln -sfn "$HOME/Developer/configs/dot-file/vim/vimrc" "$HOME/.vimrc"
 ln -sfn "$HOME/Developer/configs/dot-file/vim" "$HOME/.vim"
+mkdir -p "$HOME/.config"
+ln -sfn "$HOME/Developer/configs/dot-file/karabiner" "$HOME/.config/karabiner"
 ```
 
 Install or update Vim plugins. This step requires network access:
@@ -176,11 +186,14 @@ vim/ale.vim               Linting and formatting config
 vim/nerdtree.vim          NERDTree config
 vim/encoding_syntax.vim   Encoding and syntax settings
 vim/lsp/                  Local language server binaries
+karabiner/karabiner.json  Karabiner-Elements keyboard config
+karabiner/assets/         Karabiner complex modification assets
 ```
 
 ## Notes
 
 - The main `vim/vimrc` sources files from `~/.vim`, so linking the whole `vim` directory to `~/.vim` is required.
 - Existing Vim settings are moved into a timestamped `~/.dotfile-backup-*` directory during the install steps above.
+- Existing Karabiner settings are moved into a timestamped `~/.dotfile-backup-*` directory before linking this repo's config.
 - Plugin source checkouts are intentionally ignored by Git. Run `:PlugInstall` or `:PlugUpdate` on each machine after setup.
 - NERDTree icons require both the `vim-devicons` plugin and an active Nerd Font-capable terminal font. Installing the font is not always enough; the terminal profile must use a Nerd Font such as `JetBrainsMono Nerd Font Mono`.

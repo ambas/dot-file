@@ -6,7 +6,7 @@ repo_url="https://github.com/ambas/dot-file.git"
 install_dir="${DOTFILE_DIR:-$HOME/Developer/configs/dot-file}"
 
 # Add future top-level installers here, then map them in task_title and run_task.
-install_tasks="${INSTALL_TASKS:-vim_config vim_plugins nerd_font language_tools}"
+install_tasks="${INSTALL_TASKS:-vim_config karabiner_config vim_plugins nerd_font language_tools}"
 language_tool_tasks="${LANGUAGE_TOOL_TASKS:-javascript_typescript_tools python_tools elixir_tools}"
 nerd_font_url="${NERD_FONT_URL:-https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip}"
 symbols_nerd_font_url="${SYMBOLS_NERD_FONT_URL:-https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip}"
@@ -110,6 +110,7 @@ link_path() {
 task_title() {
   case "$1" in
     vim_config) printf '%s\n' "Vim config symlinks" ;;
+    karabiner_config) printf '%s\n' "Karabiner config symlink" ;;
     vim_plugins) printf '%s\n' "Vim plugins" ;;
     nerd_font) printf '%s\n' "Nerd Font icons" ;;
     language_tools) printf '%s\n' "Optional language tooling" ;;
@@ -124,6 +125,7 @@ run_task() {
 
   case "$task_name" in
     vim_config) install_vim_config ;;
+    karabiner_config) install_karabiner_config ;;
     vim_plugins) install_vim_plugins ;;
     nerd_font) install_nerd_font ;;
     language_tools) install_language_tools ;;
@@ -166,6 +168,29 @@ install_vim_config() {
   backup_dir="$(make_backup_dir)"
   link_path "$vimrc_path" "$HOME/.vimrc" "$backup_dir"
   link_path "$vim_dir" "$HOME/.vim" "$backup_dir"
+}
+
+install_karabiner_config() {
+  karabiner_dir="$repo_dir/karabiner"
+  karabiner_config="$karabiner_dir/karabiner.json"
+
+  if [ ! -f "$karabiner_config" ]; then
+    say "Missing Karabiner config at $karabiner_config"
+    return 1
+  fi
+
+  say "This will install Karabiner config from:"
+  say "  $karabiner_dir"
+  say "It may move existing ~/.config/karabiner into a timestamped backup directory."
+
+  if ! confirm "Install Karabiner config symlink?"; then
+    say "Skipped Karabiner config."
+    return 0
+  fi
+
+  mkdir -p "$HOME/.config"
+  backup_dir="$(make_backup_dir)"
+  link_path "$karabiner_dir" "$HOME/.config/karabiner" "$backup_dir"
 }
 
 install_vim_plugins() {
