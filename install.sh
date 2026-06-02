@@ -6,8 +6,10 @@ repo_url="https://github.com/ambas/dot-file.git"
 install_dir="${DOTFILE_DIR:-$HOME/Developer/configs/dot-file}"
 
 # Add future top-level installers here, then map them in task_title and run_task.
-install_tasks="${INSTALL_TASKS:-vim_config vim_plugins language_tools}"
+install_tasks="${INSTALL_TASKS:-vim_config vim_plugins nerd_font language_tools}"
 language_tool_tasks="${LANGUAGE_TOOL_TASKS:-javascript_typescript_tools python_tools elixir_tools}"
+nerd_font_url="${NERD_FONT_URL:-https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip}"
+symbols_nerd_font_url="${SYMBOLS_NERD_FONT_URL:-https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip}"
 
 say() {
   printf '%s\n' "$*" >&2
@@ -109,6 +111,7 @@ task_title() {
   case "$1" in
     vim_config) printf '%s\n' "Vim config symlinks" ;;
     vim_plugins) printf '%s\n' "Vim plugins" ;;
+    nerd_font) printf '%s\n' "Nerd Font icons" ;;
     language_tools) printf '%s\n' "Optional language tooling" ;;
     *) printf '%s\n' "$1" ;;
   esac
@@ -122,6 +125,7 @@ run_task() {
   case "$task_name" in
     vim_config) install_vim_config ;;
     vim_plugins) install_vim_plugins ;;
+    nerd_font) install_nerd_font ;;
     language_tools) install_language_tools ;;
     *)
       say "Unknown task: $task_name"
@@ -175,6 +179,93 @@ install_vim_plugins() {
   else
     say "Skipped Vim plugin installation."
   fi
+}
+
+has_jetbrains_nerd_font() {
+  find "$HOME/Library/Fonts" /Library/Fonts -maxdepth 1 -type f \
+    \( -iname '*JetBrains*Mono*Nerd*Font*Mono-Regular*' -o -iname '*JetBrains*Mono*Nerd*Font-Regular*' \) \
+    2>/dev/null | grep . >/dev/null 2>&1
+}
+
+install_nerd_font_with_brew() {
+  if ! has_command brew; then
+    return 1
+  fi
+
+  brew install --cask font-jetbrains-mono-nerd-font
+}
+
+install_nerd_font_from_release() {
+  if ! has_command curl; then
+    say "curl is required to download the Nerd Font fallback."
+    return 1
+  fi
+
+  if ! has_command unzip; then
+    say "unzip is required to unpack the Nerd Font fallback."
+    return 1
+  fi
+
+  font_dir="$HOME/Library/Fonts"
+  tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/dotfile-nerd-font.XXXXXX")" || return 1
+  zip_path="$tmp_dir/JetBrainsMono.zip"
+
+  mkdir -p "$font_dir"
+  say "Downloading JetBrainsMono Nerd Font from:"
+  say "  $nerd_font_url"
+
+  if ! curl -fL "$nerd_font_url" -o "$zip_path"; then
+    rm -rf "$tmp_dir"
+    say "JetBrainsMono Nerd Font download failed. Trying Symbols Nerd Font fallback."
+    tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/dotfile-symbols-nerd-font.XXXXXX")" || return 1
+    zip_path="$tmp_dir/NerdFontsSymbolsOnly.zip"
+    if ! curl -fL "$symbols_nerd_font_url" -o "$zip_path"; then
+      rm -rf "$tmp_dir"
+      return 1
+    fi
+  fi
+
+  if ! unzip -q "$zip_path" -d "$tmp_dir/font"; then
+    rm -rf "$tmp_dir"
+    return 1
+  fi
+
+  if ! find "$tmp_dir/font" -type f \
+    \( -name '*Nerd*Font*.ttf' -o -name '*Nerd*Font*.otf' \) \
+    -exec cp {} "$font_dir/" \;; then
+    rm -rf "$tmp_dir"
+    return 1
+  fi
+
+  rm -rf "$tmp_dir"
+}
+
+install_nerd_font() {
+  say "vim-devicons requires a Nerd Font-capable terminal font for file icons."
+
+  if has_jetbrains_nerd_font; then
+    say "JetBrainsMono Nerd Font is already installed."
+    return 0
+  fi
+
+  if ! confirm "Install JetBrainsMono Nerd Font for Vim icons?"; then
+    say "Skipped Nerd Font installation."
+    return 0
+  fi
+
+  if install_nerd_font_with_brew; then
+    say "Installed JetBrainsMono Nerd Font with Homebrew."
+    return 0
+  fi
+
+  if install_nerd_font_from_release; then
+    say "Installed Nerd Font files into $HOME/Library/Fonts."
+    say "Select JetBrainsMono Nerd Font Mono in your terminal profile if icons still show as boxes."
+    return 0
+  fi
+
+  say "Failed to install Nerd Font."
+  return 1
 }
 
 install_language_tools() {

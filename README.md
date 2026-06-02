@@ -1,6 +1,6 @@
 # dot-file
 
-Personal dotfiles. This repo currently manages a Vim setup with modular config files, Vim-Plug plugins, ALE linting/fixing, fzf, NERDTree, and LSP support for Elixir, Swift, Python, JavaScript, and TypeScript.
+Personal dotfiles. This repo currently manages a Vim setup with modular config files, Vim-Plug plugins, ALE linting/fixing, fzf, NERDTree icons, and LSP support for Elixir, Swift, Python, JavaScript, and TypeScript.
 
 This setup is primarily tested on macOS. The core Vim config should load anywhere Vim and the configured plugins are available, but a few optional language tools are platform-specific.
 
@@ -45,6 +45,7 @@ The installer asks before it:
 - Moves existing `~/.vimrc` or `~/.vim` into a timestamped backup directory.
 - Creates Vim symlinks.
 - Runs Vim-Plug plugin installation.
+- Installs JetBrainsMono Nerd Font for Vim file icons.
 - Installs optional language tooling.
 
 ## Remote One-Shot Install
@@ -64,6 +65,12 @@ Run only selected top-level tasks by setting `INSTALL_TASKS`:
 
 ```sh
 INSTALL_TASKS="vim_config vim_plugins" ./install.sh
+```
+
+Install only the Nerd Font used by Vim icons:
+
+```sh
+INSTALL_TASKS="nerd_font" ./install.sh
 ```
 
 Run only selected language-tool tasks by setting `LANGUAGE_TOOL_TASKS`:
@@ -98,6 +105,17 @@ Install or update Vim plugins. This step requires network access:
 ```sh
 vim +PlugInstall +qall
 ```
+
+Install JetBrainsMono Nerd Font so `vim-devicons` can render NERDTree file icons:
+
+```sh
+curl -fL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -o /tmp/JetBrainsMono.zip
+unzip -q /tmp/JetBrainsMono.zip -d /tmp/JetBrainsMono
+mkdir -p "$HOME/Library/Fonts"
+find /tmp/JetBrainsMono -type f \( -name '*Nerd*Font*.ttf' -o -name '*Nerd*Font*.otf' \) -exec cp {} "$HOME/Library/Fonts/" \;
+```
+
+Restart your terminal after installing fonts. If icons still appear as boxes, choose `JetBrainsMono Nerd Font Mono` in the terminal profile.
 
 ## Optional Tooling
 
@@ -165,3 +183,4 @@ vim/lsp/                  Local language server binaries
 - The main `vim/vimrc` sources files from `~/.vim`, so linking the whole `vim` directory to `~/.vim` is required.
 - Existing Vim settings are moved into a timestamped `~/.dotfile-backup-*` directory during the install steps above.
 - Plugin source checkouts are intentionally ignored by Git. Run `:PlugInstall` or `:PlugUpdate` on each machine after setup.
+- NERDTree icons require both the `vim-devicons` plugin and an active Nerd Font-capable terminal font. Installing the font is not always enough; the terminal profile must use a Nerd Font such as `JetBrainsMono Nerd Font Mono`.
